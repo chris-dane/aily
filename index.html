@@ -8,7 +8,8 @@
 </head>
 <body class="bg-gray-50 text-gray-900">
   <main class="mx-auto max-w-3xl space-y-6 p-4">
-    <h1 class="py-6 text-3xl font-bold">AI Daily Detective</h1>
+    <!-- Title with half the padding -->
+    <h1 class="py-3 text-3xl font-bold">AI Daily Detective</h1>
 
     <section id="game" class="rounded-2xl border bg-white p-4 shadow-sm">
       <div id="question" class="pb-2 text-sm text-gray-500"></div>
@@ -20,9 +21,6 @@
         <div class="rounded-2xl border p-3 bg-green-50">
           <div class="text-sm text-gray-500">Success!</div>
           <div id="rationale" class="mt-1 text-sm text-gray-800"></div>
-        </div>
-        <div class="flex flex-wrap gap-2 text-sm">
-          <button id="replay" class="rounded-xl border px-3 py-2 hover:bg-gray-50">Replay</button>
         </div>
       </div>
     </section>
@@ -47,7 +45,6 @@ async function loadCase() {
   const choices = document.getElementById('choices');
   const reveal = document.getElementById('reveal');
   const rationale = document.getElementById('rationale');
-  const replay = document.getElementById('replay');
 
   // Reset UI
   choices.innerHTML = '';
@@ -61,20 +58,15 @@ async function loadCase() {
     btn.addEventListener('click', () => {
       const isCorrect = theme === data.primary_theme;
       if (isCorrect) {
+        btn.style.backgroundColor = "#dcfce7"; // light green
         rationale.textContent = data.rationale || "";
         reveal.classList.remove('hidden');
       } else {
-        // very light translucent red on wrong choice
-        btn.style.backgroundColor = "rgba(220, 38, 38, 0.12)";
+        btn.style.backgroundColor = "rgba(220, 38, 38, 0.12)"; // light red
       }
     });
     choices.appendChild(btn);
   });
-
-  replay.onclick = () => {
-    [...choices.children].forEach(c => c.style.backgroundColor = "");
-    reveal.classList.add('hidden');
-  };
 }
 
 loadCase();

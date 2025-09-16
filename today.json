@@ -1,0 +1,7 @@
+{
+  "question": "Is there life on Mars?",
+  "ai_output": "Scientists continue to search for life on Mars. Evidence of liquid water suggests microbial life could exist today. Most researchers agree that Mars once had oceans covering half the planet.",
+  "themes": ["Factual Error", "Assumption", "Bias"],
+  "primary_theme": "Assumption",
+  "rationale": "Water is necessary but not sufficient for life; this sentence overstates the implication."
+}

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Daily Detective</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <main class="mx-auto max-w-3xl space-y-6 p-4">
+    <h1 class="py-6 text-3xl font-bold">AI Daily Detective</h1>
+
+    <section id="game" class="rounded-2xl border bg-white p-4 shadow-sm">
+      <div id="question" class="pb-2 text-sm text-gray-500"></div>
+      <blockquote id="output" class="rounded-2xl bg-gray-50 p-4 italic"></blockquote>
+
+      <div id="choices" class="mt-4 flex flex-wrap gap-2"></div>
+
+      <div id="reveal" class="hidden mt-4 space-y-3">
+        <div class="rounded-2xl border p-3 bg-green-50">
+          <div class="text-sm text-gray-500">Success!</div>
+          <div id="rationale" class="mt-1 text-sm text-gray-800"></div>
+        </div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <button id="replay" class="rounded-xl border px-3 py-2 hover:bg-gray-50">Replay</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="space-y-2">
+      <h2 class="text-xl font-semibold">How to Play</h2>
+      <p class="text-sm text-gray-700">
+        Each day we publish unadulterated output from an AI containing an error — your job is to find it!
+      </p>
+    </section>
+  </main>
+
+<script>
+async function loadCase() {
+  const res = await fetch('today.json?d=' + Date.now());
+  const data = await res.json();
+
+  // Fill content
+  document.getElementById('question').textContent = data.question;
+  document.getElementById('output').textContent = data.ai_output;
+
+  const choices = document.getElementById('choices');
+  const reveal = document.getElementById('reveal');
+  const rationale = document.getElementById('rationale');
+  const replay = document.getElementById('replay');
+
+  // Reset UI
+  choices.innerHTML = '';
+  reveal.classList.add('hidden');
+
+  // Build buttons
+  (data.themes || ["Factual Error","Assumption","Bias"]).forEach(theme => {
+    const btn = document.createElement('button');
+    btn.textContent = theme;
+    btn.className = "rounded-xl border px-3 py-2 text-sm hover:bg-gray-50";
+    btn.addEventListener('click', () => {
+      const isCorrect = theme === data.primary_theme;
+      if (isCorrect) {
+        rationale.textContent = data.rationale || "";
+        reveal.classList.remove('hidden');
+      } else {
+        // very light translucent red on wrong choice
+        btn.style.backgroundColor = "rgba(220, 38, 38, 0.12)";
+      }
+    });
+    choices.appendChild(btn);
+  });
+
+  replay.onclick = () => {
+    [...choices.children].forEach(c => c.style.backgroundColor = "");
+    reveal.classList.add('hidden');
+  };
+}
+
+loadCase();
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 {
-  "question": "What is the most common colour in the aurora borealis?",
-  "ai_output": "The most common colour in the aurora borealis is green. This occurs when charged particles from the solar wind collide with oxygen molecules in the Earth’s upper atmosphere, typically at altitudes between 100 and 300 kilometres. The collisions excite the oxygen atoms, which then release energy as visible light, most often in the green part of the spectrum at a wavelength of 557.7 nanometres. Although auroras can also appear in red, purple, pink, or blue depending on altitude and atmospheric composition, green dominates because oxygen is abundant at these altitudes and the emission process is highly efficient.",
+  "question": "What can dogs see?",
+  "ai_output": "Dogs see the world differently from humans because their eyes contain more rod cells and fewer cone cells. This means they excel at detecting movement and seeing in low light but have limited colour perception. While humans have three types of cones sensitive to red, green and blue, dogs have only two, sensitive mainly to blue and yellow. As a result, they perceive a spectrum similar to red–green colour blindness in humans, where reds and greens appear as shades of grey or brown. Their vision is optimised for hunting and detecting motion rather than for distinguishing a wide range of colours.",
   "themes": ["Factual Error", "Assumption", "Bias"],
   "primary_theme": "Assumption",
-  "rationale": "The answer is reliable, but it makes one assumption. It says green is the most common colour without adding that this depends on conditions. Most of the time green shows up the most, because oxygen in the atmosphere produces it efficiently. But during very strong solar storms or in higher parts of the sky, other colours like red or purple can be just as visible, or even dominate. So the assumption is that green is always the main colour, when in fact it is only the most common on average under normal conditions."
+  "rationale": "The statement that their vision is “optimised for hunting” assumes evolutionary purpose, which is a reasonable inference but not a strictly proven fact."
 }

@@ -3,5 +3,5 @@
   "ai_output": "Dogs see the world differently from humans because their eyes contain more rod cells and fewer cone cells. This means they excel at detecting movement and seeing in low light but have limited colour perception. While humans have three types of cones sensitive to red, green and blue, dogs have only two, sensitive mainly to blue and yellow. As a result, they perceive a spectrum similar to red–green colour blindness in humans, where reds and greens appear as shades of grey or brown. Their vision is optimised for hunting and detecting motion rather than for distinguishing a wide range of colours.",
   "themes": ["Factual Error", "Assumption", "Bias"],
   "primary_theme": "Assumption",
-  "rationale": "The statement that their vision is “optimised for hunting” assumes evolutionary purpose, which is a reasonable inference but not a strictly proven fact."
+  "rationale": "The statement that dogs’ vision is ‘optimised for hunting’ assumes evolutionary purpose, which is a reasonable inference but not a strictly proven fact."
 }

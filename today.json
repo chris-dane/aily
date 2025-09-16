@@ -1,7 +1,7 @@
 {
   "question": "Is there life on Mars?",
-  "ai_output": "Scientists continue to search for life on Mars. Evidence of liquid water suggests microbial life could exist today. Most researchers agree that Mars once had oceans covering half the planet.",
+  "ai_output": "There is no confirmed evidence of life on Mars today, but scientists continue to investigate the possibility. Mars has conditions that were once more favourable, with evidence of liquid water on its surface billions of years ago and signs of ancient rivers, lakes, and possibly oceans. Today, the planet is cold, dry, and has a thin atmosphere, making surface life unlikely. However, microbial life may have existed in the past or could persist underground, protected from radiation. Robotic missions like NASA’s Perseverance rover are searching for biosignatures, and future missions may provide clearer answers about Mars’ potential habitability.",
   "themes": ["Factual Error", "Assumption", "Bias"],
   "primary_theme": "Assumption",
-  "rationale": "Water is necessary but not sufficient for life; this sentence overstates the implication."
+  "rationale": "The claim that “microbial life may have existed in the past or could persist underground” is an assumption. It is a hypothesis, not established fact."
 }

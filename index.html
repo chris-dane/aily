@@ -41,7 +41,7 @@
 
 <script>
 async function loadCase() {
-  const res = await fetch('today.json?d=' + Date.now());
+  const res = await fetch('content.json?d=' + Date.now());
   const data = await res.json();
 
   // Fill content

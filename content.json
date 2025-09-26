@@ -1,9 +1,8 @@
 {
   "question": "What can dogs see?",
-  "ai_output": "Dogs see fewer colours than humans. They are most sensitive to blues and yellows, and their eyes adapt well to low light, which helps them detect movement at dusk.",
+  "ai_output": "Dogs have a different visual perception compared to humans. They see the world primarily in shades of blue and yellow, as they have dichromatic vision, meaning they have two types of color receptors instead of three like humans. This limits their ability to distinguish between red and green hues, which often appear as shades of gray or brown to them. Additionally, dogs have better motion detection and night vision due to a higher number of rod cells in their retinas and a reflective layer behind the retina called the tapetum lucidum, which enhances light sensitivity. While their visual acuity is lower than humans, making distant objects appear blurrier, dogs rely more on their keen sense of smell and hearing to interpret their surroundings.",
   "deductions": [
-    "Omission",
-    "Outdated"
+    "Omission"
   ],
-  "global_reason": "Answer omits dichromacy and includes a dated claim about night vision."
+  "global_reason": "The answer provides a good overview of dogs' visual capabilities, but it omits information about their ability to see ultraviolet light, which is an important aspect of their visual perception."
 }

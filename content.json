@@ -1,13 +1,9 @@
 {
   "question": "What can dogs see?",
   "ai_output": "Dogs see fewer colours than humans. They are most sensitive to blues and yellows, and their eyes adapt well to low light, which helps them detect movement at dusk.",
-  "labels": [
-    "Hallucination / factual error",
-    "Omission / incomplete coverage",
-    "Outdated / time-drift error",
-    "Off-topic / drift",
-    "Bias / overconfidence / tone issues"
+  "deductions": [
+    "Omission",
+    "Outdated"
   ],
-  "deductions": ["Omission / incomplete coverage", "Outdated / time-drift error"],
   "global_reason": "Answer omits dichromacy and includes a dated claim about night vision."
 }

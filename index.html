@@ -3,79 +3,181 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AI Detective</title>
+  <title>AI Critique — Prototype</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      padding-bottom: 40px; /* space at bottom */
-    }
+    body { padding-bottom: 40px; }
+    .pill { @apply rounded-xl border px-3 py-2 text-sm hover:bg-gray-50; }
+    .pill-selected { @apply bg-black text-white border-black; }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900">
-  <main class="mx-auto max-w-3xl space-y-6 p-4">
-    <!-- Title with half the padding -->
-    <h1 class="py-3 text-3xl font-bold">AI Detective</h1>
+  <main class="mx-auto max-w-3xl p-4 space-y-6">
+    <header class="pt-2">
+      <h1 class="text-3xl font-bold">AI Critique</h1>
+      <p class="text-sm text-gray-600 mt-1">Read, pick the biggest weakness, then see how the evaluator judged it.</p>
+    </header>
 
-    <section id="game" class="rounded-2xl border bg-white p-4 shadow-sm">
-      <div id="question" class="pb-2 text-sm text-gray-500"></div>
-      <blockquote id="output" class="rounded-2xl bg-gray-50 p-4 italic"></blockquote>
-
-      <div id="choices" class="mt-4 flex flex-wrap gap-2"></div>
-
-      <div id="reveal" class="hidden mt-4 space-y-3">
-        <div class="rounded-2xl border p-3 bg-green-100">
-          <div class="text-sm text-gray-500">Success!</div>
-          <div id="rationale" class="mt-1 text-sm text-gray-800"></div>
+    <section id="play" class="rounded-2xl border bg-white p-4 shadow-sm">
+      <div class="flex items-center justify-between gap-4">
+        <div class="text-xs text-gray-500">
+          <span id="questionTypeBadge" class="inline-block rounded-full bg-gray-100 px-2 py-1"></span>
         </div>
+        <div class="text-xs text-gray-500" id="modelBadges"></div>
+      </div>
+
+      <h2 id="question" class="mt-2 text-lg font-semibold"></h2>
+      <blockquote id="answer" class="mt-2 rounded-2xl bg-gray-50 p-4 italic"></blockquote>
+
+      <div class="mt-3 text-sm text-gray-700">Pick the <span class="font-semibold">biggest weakness</span> you see:</div>
+      <div id="choices" class="mt-2 flex flex-wrap gap-2"></div>
+
+      <div class="mt-4">
+        <button id="submitBtn" class="rounded-xl bg-black px-4 py-2 text-sm text-white disabled:opacity-40" disabled>Submit</button>
       </div>
     </section>
 
-    <section class="space-y-2">
-      <h2 class="text-xl font-semibold">How to Play</h2>
-      <p class="text-sm text-gray-700">
-        Every week we publish unedited output from an AI — see if you can spot an issue! It’s an experimental concept to help encourage critical thinking when using AI. <a href="https://drive.google.com/file/d/1Usqv0ULMnLDwBtDiH0dIGW3l558oPf1V/view" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline">
-      Discover our Mission
-      </p>
+    <section id="results" class="hidden rounded-2xl border bg-white p-4 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <h3 class="text-lg font-semibold">Results</h3>
+        <div id="scoreBadge" class="text-sm"></div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="rounded-xl border p-3">
+          <div class="text-xs text-gray-500">Your pick</div>
+          <div id="yourPick" class="mt-1 text-sm font-medium"></div>
+        </div>
+        <div class="rounded-xl border p-3">
+          <div class="text-xs text-gray-500">Evaluator pick</div>
+          <div id="evaluatorPick" class="mt-1 text-sm font-medium"></div>
+          <div id="deductionsList" class="mt-2 text-xs text-gray-600"></div>
+        </div>
+      </div>
+
+      <div class="rounded-xl border p-3 bg-green-50" id="matchPanel">
+        <div id="matchLine" class="text-sm font-medium"></div>
+        <div id="reasonLine" class="mt-1 text-sm"></div>
+        <div id="evidenceLine" class="mt-1 text-xs text-gray-600"></div>
+      </div>
+
+      <div class="rounded-xl border p-3">
+        <div class="text-xs text-gray-500 mb-1">Question type</div>
+        <div id="questionTypeLine" class="text-sm"></div>
+        <div id="teachingLine" class="mt-1 text-xs text-gray-600"></div>
+      </div>
     </section>
+
+    <footer class="text-xs text-gray-500 pt-2">
+      Prototype. Educational use. Answers are model-generated and may be incorrect.
+    </footer>
   </main>
 
 <script>
-async function loadCase() {
+(async function () {
   const res = await fetch('content.json?d=' + Date.now());
   const data = await res.json();
 
-  // Fill content
-  document.getElementById('question').textContent = data.question;
-  document.getElementById('output').textContent = data.ai_output;
+  // ---- constants (keep in sync with content.json labels) ----
+  const LABELS = [
+    "Hallucination / factual error",
+    "Omission / incomplete coverage",
+    "Outdated / time-drift error",
+    "Off-topic / drift",
+    "Bias / overconfidence / tone issues"
+  ];
 
-  const choices = document.getElementById('choices');
-  const reveal = document.getElementById('reveal');
-  const rationale = document.getElementById('rationale');
+  // ---- populate play view ----
+  const qEl = document.getElementById('question');
+  const aEl = document.getElementById('answer');
+  const choicesEl = document.getElementById('choices');
+  const submitBtn = document.getElementById('submitBtn');
+  const resultsEl = document.getElementById('results');
 
-  // Reset UI
-  choices.innerHTML = '';
-  reveal.classList.add('hidden');
+  qEl.textContent = data.question;
+  aEl.textContent = data.ai_output;
 
-  // Build buttons
-  (data.themes || ["Factual Error","Assumption","Bias"]).forEach(theme => {
+  document.getElementById('questionTypeBadge').textContent = data.question_type;
+  document.getElementById('modelBadges').textContent =
+    `Answer: ${data.models.answered_by} · Evaluated by: ${data.models.evaluated_by}`;
+
+  const btns = [];
+  let selected = null;
+
+  LABELS.forEach(label => {
     const btn = document.createElement('button');
-    btn.textContent = theme;
-    btn.className = "rounded-xl border px-3 py-2 text-sm hover:bg-gray-50";
-    btn.addEventListener('click', () => {
-      const isCorrect = theme === data.primary_theme;
-      if (isCorrect) {
-        btn.style.backgroundColor = "#dcfce7"; // light green
-        rationale.textContent = data.rationale || "";
-        reveal.classList.remove('hidden');
-      } else {
-        btn.style.backgroundColor = "rgba(220, 38, 38, 0.12)"; // light red
-      }
-    });
-    choices.appendChild(btn);
+    btn.type = 'button';
+    btn.className = 'pill';
+    btn.textContent = label;
+    btn.onclick = () => {
+      selected = label;
+      btns.forEach(b => b.classList.remove('pill-selected'));
+      btn.classList.add('pill-selected');
+      submitBtn.disabled = false;
+    };
+    btns.push(btn);
+    choicesEl.appendChild(btn);
   });
-}
 
-loadCase();
+  // verdict band helper (derived from score)
+  function verdictBand(score) {
+    if (score >= 85) return 'Strong';
+    if (score >= 70) return 'Mixed';
+    if (score >= 50) return 'Weak';
+    return 'Flawed';
+  }
+
+  function fmtList(arr) {
+    if (!arr || !arr.length) return 'None';
+    return arr.join(', ');
+  }
+
+  // ---- submit → show results ----
+  submitBtn.onclick = () => {
+    if (!selected) return;
+
+    // UI: compute match against evaluator's primary label
+    const primary = data.primary_label;
+    const allDeductions = data.deductions || [];
+
+    // Score badge
+    const score = data.score_pct;
+    const band = verdictBand(score);
+    const scoreBadge = document.getElementById('scoreBadge');
+    scoreBadge.innerHTML = `<span class="inline-block rounded-full bg-gray-100 px-2 py-1">Score ${score}/100 · ${band}</span>`;
+
+    // Picks
+    document.getElementById('yourPick').textContent = selected;
+    document.getElementById('evaluatorPick').textContent = primary;
+    document.getElementById('deductionsList').innerHTML =
+      `<div class="mt-1">All deductions: <span class="font-mono">${fmtList(allDeductions)}</span></div>`;
+
+    // Match panel
+    const match = selected === primary;
+    const matchLine = document.getElementById('matchLine');
+    const rationale = data.reason || '';
+    const evidence = data.evidence_hint && data.evidence_hint !== 'unknown'
+      ? `Evidence: ${data.evidence_hint}`
+      : 'No clear reference found.';
+    matchLine.textContent = match ? 'You matched the evaluator.' : 'Different to the evaluator.';
+    document.getElementById('reasonLine').textContent = `Why: ${rationale}`;
+    document.getElementById('evidenceLine').textContent = evidence;
+    document.getElementById('matchPanel').className =
+      'rounded-xl border p-3 ' + (match ? 'bg-green-50' : 'bg-amber-50');
+
+    // Type + teaching note
+    document.getElementById('questionTypeLine').textContent = data.question_type;
+    const t = (data.teaching_notes && data.teaching_notes[data.primary_label]) ||
+              'Consider how the question shape affects the answer.';
+    document.getElementById('teachingLine').textContent = t;
+
+    // Reveal
+    resultsEl.classList.remove('hidden');
+    // Focus for accessibility
+    resultsEl.setAttribute('tabindex', '-1');
+    resultsEl.focus();
+  };
+})();
 </script>
 </body>
 </html>

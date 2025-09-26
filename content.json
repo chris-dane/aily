@@ -9,5 +9,5 @@
     "Bias / overconfidence / tone issues"
   ],
   "deductions": ["Omission / incomplete coverage", "Outdated / time-drift error"],
-  "global_reason": "Answer omits dichromacy and includes a dated claim about night vision. Validated by Britannica (canine dichromacy)."
+  "global_reason": "Answer omits dichromacy and includes a dated claim about night vision."
 }

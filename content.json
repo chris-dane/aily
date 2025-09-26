@@ -1,6 +1,5 @@
 {
   "question": "What can dogs see?",
-  "question_type": "Factual / definitional",
   "ai_output": "Dogs see fewer colours than humans. They are most sensitive to blues and yellows, and their eyes adapt well to low light, which helps them detect movement at dusk.",
   "labels": [
     "Hallucination / factual error",
@@ -9,20 +8,6 @@
     "Off-topic / drift",
     "Bias / overconfidence / tone issues"
   ],
-  "deductions": ["Omission / incomplete coverage"],
-  "primary_label": "Omission / incomplete coverage",
-  "score_pct": 80,
-  "reason": "Does not name dichromacy or red–green confusion explicitly.",
-  "evidence_hint": "Britannica: dogs are dichromats (blue/yellow sensitive)",
-  "models": {
-    "answered_by": "OpenAI",
-    "evaluated_by": "Claude"
-  },
-  "teaching_notes": {
-    "Hallucination / factual error": "Even strong models can invent details. Cross-check claims against a reputable source.",
-    "Omission / incomplete coverage": "Short answers often skip a key idea. Ask for the essential concept explicitly.",
-    "Outdated / time-drift error": "Models can lag behind current knowledge. Add time scope if recency matters.",
-    "Off-topic / drift": "Vague prompts invite drift. Tighten the question to keep the model on track.",
-    "Bias / overconfidence / tone issues": "Loaded words or absolute certainty are red flags. Request evidence or a softer claim."
-  }
+  "deductions": ["Omission / incomplete coverage", "Outdated / time-drift error"],
+  "global_reason": "Answer omits dichromacy and includes a dated claim about night vision. Validated by Britannica (canine dichromacy)."
 }

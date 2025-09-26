@@ -55,37 +55,53 @@
   </main>
 
   <script>
+  // Tight backend labels (fixed order for UI) → user-facing descriptions
+  const LABEL_ORDER = [
+    "Factual error",
+    "Omission",
+    "Bias / overconfidence",
+    "Outdated",
+    "Off-topic"
+  ];
+  const LABEL_DESCRIPTIONS = {
+    "Factual error": "Contains a false or made-up claim.",
+    "Omission": "Leaves out key information.",
+    "Bias / overconfidence": "Shows bias, overconfidence, or unfounded assumptions.",
+    "Outdated": "Relies on old or no-longer-true information.",
+    "Off-topic": "Doesn’t directly answer the question."
+  };
+
   async function loadCase() {
     const res = await fetch("content.json?d=" + Date.now());
     const data = await res.json();
 
-    // Populate question and answer
+    // Populate Q & A
     document.getElementById('question').textContent = data.question;
     document.getElementById('answer').textContent = data.ai_output;
 
-    // Build checkbox list (multi-select)
+    // Build checkbox list (store tight keys, show descriptions)
     const form = document.getElementById('choices');
     form.innerHTML = "";
     const selected = new Set();
 
-    (data.labels || []).forEach((label, idx) => {
+    LABEL_ORDER.forEach((key, idx) => {
       const id = 'opt_' + idx;
       const wrap = document.createElement('div');
       wrap.className = 'flex items-start gap-2';
 
       const cb = document.createElement('input');
       cb.type = 'checkbox';
-      cb.id = id; cb.value = label;
+      cb.id = id; cb.value = key;
       cb.className = 'mt-0.5 h-4 w-4 rounded border-gray-300 text-black focus:ring-black';
       cb.addEventListener('change', () => {
-        if (cb.checked) selected.add(label); else selected.delete(label);
+        if (cb.checked) selected.add(key); else selected.delete(key);
         document.getElementById('submitBtn').disabled = selected.size === 0;
       });
 
       const lab = document.createElement('label');
       lab.setAttribute('for', id);
       lab.className = 'text-sm';
-      lab.textContent = label;
+      lab.textContent = LABEL_DESCRIPTIONS[key];
 
       wrap.appendChild(cb);
       wrap.appendChild(lab);
@@ -94,41 +110,39 @@
 
     // Submit → results
     document.getElementById('submitBtn').onclick = () => {
-      const user = Array.from(selected);
-      const evalDeds = data.deductions || [];
+      const user = Array.from(selected);                 // tight keys
+      const evalDeds = data.deductions || [];            // tight keys from backend
 
       const tableBody = document.getElementById('resultsTable');
       tableBody.innerHTML = '';
 
-      (data.labels || []).forEach(label => {
+      LABEL_ORDER.forEach(key => {
         const tr = document.createElement('tr');
 
         const tdLabel = document.createElement('td');
         tdLabel.className = 'p-2 border-b';
-        tdLabel.textContent = label;
+        tdLabel.textContent = LABEL_DESCRIPTIONS[key];
         tr.appendChild(tdLabel);
 
         const tdUser = document.createElement('td');
         tdUser.className = 'p-2 border-b text-center';
-        if (user.includes(label)) tdUser.textContent = '✔';
+        if (user.includes(key)) tdUser.textContent = '✔';
         tr.appendChild(tdUser);
 
         const tdEval = document.createElement('td');
         tdEval.className = 'p-2 border-b text-center';
-        if (evalDeds.includes(label)) tdEval.textContent = '✔';
+        if (evalDeds.includes(key)) tdEval.textContent = '✔';
         tr.appendChild(tdEval);
 
-        if (user.includes(label) && evalDeds.includes(label)) {
+        if (user.includes(key) && evalDeds.includes(key)) {
           tr.classList.add('bg-green-50');
         }
 
         tableBody.appendChild(tr);
       });
 
-      // Global rationale
       document.getElementById('reasonLine').textContent = data.global_reason || '';
 
-      // Reveal
       const resultsEl = document.getElementById('results');
       resultsEl.classList.remove('hidden');
       resultsEl.setAttribute('tabindex', '-1');

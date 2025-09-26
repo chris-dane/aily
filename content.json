@@ -1,7 +1,28 @@
 {
   "question": "What can dogs see?",
-  "ai_output": "Dogs see the world differently from humans because their eyes contain more rod cells and fewer cone cells. This means they excel at detecting movement and seeing in low light but have limited colour perception. While humans have three types of cones sensitive to red, green and blue, dogs have only two, sensitive mainly to blue and yellow. As a result, they perceive a spectrum similar to red–green colour blindness in humans, where reds and greens appear as shades of grey or brown. Their vision is optimised for hunting and detecting motion rather than for distinguishing a wide range of colours.",
-  "themes": ["Factual Error", "Assumption", "Bias"],
-  "primary_theme": "Assumption",
-  "rationale": "The statement that dogs’ vision is ‘optimised for hunting’ assumes evolutionary purpose, which is a reasonable inference but not a strictly proven fact."
+  "question_type": "Factual / definitional",
+  "ai_output": "Dogs see fewer colours than humans. They are most sensitive to blues and yellows, and their eyes adapt well to low light, which helps them detect movement at dusk.",
+  "labels": [
+    "Hallucination / factual error",
+    "Omission / incomplete coverage",
+    "Outdated / time-drift error",
+    "Off-topic / drift",
+    "Bias / overconfidence / tone issues"
+  ],
+  "deductions": ["Omission / incomplete coverage"],
+  "primary_label": "Omission / incomplete coverage",
+  "score_pct": 80,
+  "reason": "Does not name dichromacy or red–green confusion explicitly.",
+  "evidence_hint": "Britannica: dogs are dichromats (blue/yellow sensitive)",
+  "models": {
+    "answered_by": "OpenAI",
+    "evaluated_by": "Claude"
+  },
+  "teaching_notes": {
+    "Hallucination / factual error": "Even strong models can invent details. Cross-check claims against a reputable source.",
+    "Omission / incomplete coverage": "Short answers often skip a key idea. Ask for the essential concept explicitly.",
+    "Outdated / time-drift error": "Models can lag behind current knowledge. Add time scope if recency matters.",
+    "Off-topic / drift": "Vague prompts invite drift. Tighten the question to keep the model on track.",
+    "Bias / overconfidence / tone issues": "Loaded words or absolute certainty are red flags. Request evidence or a softer claim."
+  }
 }
